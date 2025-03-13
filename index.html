@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shanex Academy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-blue: #1E3A8A;
+            --light-blue: #3B82F6;
+            --text: #E2E8F0;
+        }
+
+        body {
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            background: #0F172A;
+            color: var(--text);
+            margin: 0;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #login-page, #academy-page, #student-register {
+            display: none;
+        }
+
+        #login-page.active, #academy-page.active, #student-register.active {
+            display: block;
+        }
+
+        .login-container, .register-container {
+            background: var(--dark-blue);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .login-container h1, .register-container h1 {
+            margin-bottom: 20px;
+        }
+
+        .login-container input, .register-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+        }
+
+        .login-container button, .register-container button {
+            padding: 10px 20px;
+            background: var(--light-blue);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 5px;
+        }
+
+        .login-container button:hover, .register-container button:hover {
+            background: #2563EB;
+        }
+
+        /* Academy Page Styles */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--dark-blue);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .hamburger { display: none; cursor: pointer; }
+        .bar { width: 25px; height: 3px; background: var(--text); margin: 5px 0; transition: 0.4s; }
+        .nav-links { display: flex; list-style: none; margin: 0; padding: 0; }
+        .nav-links a { color: var(--text); padding: 12px 20px; text-decoration: none; border-radius: 5px; transition: 0.3s; }
+        .nav-links a:hover { background: var(--light-blue); transform: translateY(-2px); }
+
+        .section { padding: 60px 20px; min-height: 100vh; }
+
+        #home {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1523240795612-9a054b0db644');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        #home h1 {
+            font-size: 3.5em;
+            animation: textGlow 2s infinite alternate;
+            text-shadow: 0 0 10px var(--light-blue);
+        }
+
+        #home p {
+            font-size: 1.5em;
+            animation: slideUp 1s ease-in;
+        }
+
+        #ai-features {
+            background: var(--dark-blue);
+            color: var(--text);
+            text-align: center;
+            border-radius: 15px;
+            padding: 40px 20px;
+        }
+
+        #ai-features ul { list-style: none; padding: 0; }
+        #ai-features li { margin: 10px 0; }
+
+        #lms {
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        #lms table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        #lms th, #lms td { border: 1px solid rgba(255,255,255,0.2); padding: 8px; text-align: left; }
+        #lms th { background: rgba(255,255,255,0.1); }
+        .pdf-viewer { max-height: 300px; overflow: auto; margin-top: 20px; background: rgba(0,0,0,0.2); }
+        .delete-btn { background: #ff4444; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; margin: 2px; }
+        .view-btn, .download-btn { background: var(--light-blue); color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px; margin: 2px; }
+
+        #horoscope {
+            background: var(--dark-blue);
+            color: var(--text);
+            text-align: center;
+            border-radius: 15px;
+            padding: 40px 20px;
+        }
+
+        #horoscope select { padding: 10px; border-radius: 5px; border: 1px solid var(--text); background: transparent; color: var(--text); margin: 20px 0; }
+        #prediction { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; min-height: 100px; }
+
+        #blogs {
+            background: var(--dark-blue);
+            color: var(--text);
+            border-radius: 15px;
+            padding: 40px 20px;
+        }
+
+        .blog-post { background: rgba(255,255,255,0.1); padding: 20px; margin: 20px 0; border-radius: 10px; }
+
+        #chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--light-blue);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: float 3s infinite;
+        }
+
+        #chat-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: var(--dark-blue);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+        }
+
+        .chat-header { background: var(--light-blue); color: white; padding: 10px; display: flex; justify-content: flex-end; }
+        .chat-header button { background: none; border: none; color: white; cursor: pointer; }
+        #chat-messages { flex-grow: 1; padding: 10px; overflow-y: auto; background: rgba(255,255,255,0.05); }
+        #chat-input { width: 100%; padding: 10px; border: none; border-top: 1px solid rgba(255,255,255,0.2); box-sizing: border-box; background: var(--dark-blue); color: var(--text); }
+
+        .user-msg { background: var(--light-blue); color: white; padding: 5px 10px; border-radius: 5px; margin: 5px 0; text-align: right; }
+        .ai-msg { background: rgba(255,255,255,0.1); color: var(--text); padding: 5px 10px; border-radius: 5px; margin: 5px 0; }
+
+        .animated-button { padding: 10px 20px; background: var(--light-blue); border: none; border-radius: 5px; color: white; cursor: pointer; transition: 0.3s; }
+        .animated-button:hover { background: #2563EB; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes textGlow { 0% { text-shadow: 0 0 10px var(--light-blue); } 100% { text-shadow: 0 0 20px var(--light-blue); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links { display: none; position: absolute; top: 60px; right: 0; background: var(--dark-blue); flex-direction: column; width: 100%; }
+            .nav-links.active { display: flex; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="login-page" class="active">
+        <div class="login-container">
+            <h1>Shanex Academy Login</h1>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+            <button onclick="showStudentRegister()">Student</button>
+            <p style="margin-top: 20px;">Leave blank to continue as a guest student</p>
+        </div>
+    </div>
+
+    <!-- Student Registration Page -->
+    <div id="student-register">
+        <div class="register-container">
+            <h1>Create Student Profile</h1>
+            <input type="text" id="new-username" placeholder="New Username">
+            <input type="password" id="new-password" placeholder="New Password">
+            <button onclick="registerStudent()">Register</button>
+            <button onclick="backToLogin()">Back</button>
+        </div>
+    </div>
+
+    <!-- Academy Page -->
+    <div id="academy-page">
+        <nav>
+            <div class="hamburger" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#ai-features">AI Features</a></li>
+                <li><a href="#lms">LMS</a></li>
+                <li><a href="#blogs">Blogs</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#horoscope">Horoscope</a></li>
+                <li><a href="#partners">Partners</a></li>
+                <li><a href="#students">Students</a></li>
+            </ul>
+        </nav>
+
+        <div id="home" class="section" data-aos="fade-up">
+            <h1>Welcome to Shanex Academy</h1>
+            <p>Learn Different, Lead Better</p>
+        </div>
+
+        <div id="ai-features" class="section" data-aos="zoom-in">
+            <h2>AI Features for Students</h2>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Personalized Learning Paths</li>
+                <li><i class="fas fa-check-circle"></i> AI-Powered Doubt Resolution</li>
+                <li><i class="fas fa-check-circle"></i> Smart Study Schedulers</li>
+                <li><i class="fas fa-check-circle"></i> Real-Time Feedback on Assignments</li>
+                <li><i class="fas fa-check-circle"></i> AI Chat Assistants for Queries</li>
+            </ul>
+        </div>
+
+        <div id="lms" class="section" data-aos="fade-up">
+            <h2>Learning Management System</h2>
+            <h3>Latest Announcements</h3>
+            <p><strong>Upcoming Exam Dates:</strong> The final exams for all courses will be held next week. Please prepare accordingly.</p>
+            <p><strong>New Course:</strong> We are excited to announce the launch of our new course on Artificial Intelligence. Enroll now!</p>
+
+            <h3>Course Materials</h3>
+            <div id="owner-upload" style="margin-bottom: 20px; display: none;">
+                <input type="text" id="material-name" placeholder="Material Name" style="padding: 8px; margin-right: 10px;">
+                <input type="file" id="material-upload" accept=".pdf" onchange="uploadMaterial()">
+            </div>
+            <table id="materials-table">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Material Name</th>
+                        <th>File</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="materials-body"></tbody>
+            </table>
+            <div id="material-viewer" class="pdf-viewer"></div>
+
+            <h3>Assignments</h3>
+            <div id="owner-assignments" style="margin-bottom: 20px; display: none;">
+                <input type="text" id="assignment-name" placeholder="Assignment Name" style="padding: 8px; margin-right: 10px;">
+                <button onclick="addAssignment()" class="animated-button">Add Assignment</button>
+            </div>
+            <table id="assignments-table">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Assignment</th>
+                        <th>Student Submission</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="assignments-body"></tbody>
+            </table>
+            <div id="assignment-viewer" class="pdf-viewer"></div>
+        </div>
+
+        <div id="horoscope" class="section" data-aos="flip-up">
+            <h2>Daily Horoscope</h2>
+            <select id="zodiac">
+                <option value="">Select Your Zodiac Sign</option>
+                <option value="aries">Aries</option>
+                <option value="taurus">Taurus</option>
+                <option value="gemini">Gemini</option>
+                <option value="cancer">Cancer</option>
+                <option value="leo">Leo</option>
+                <option value="virgo">Virgo</option>
+                <option value="libra">Libra</option>
+                <option value="scorpio">Scorpio</option>
+                <option value="sagittarius">Sagittarius</option>
+                <option value="capricorn">Capricorn</option>
+                <option value="aquarius">Aquarius</option>
+                <option value="pisces">Pisces</option>
+            </select>
+            <button onclick="getPrediction()" class="animated-button">Get Prediction</button>
+            <div id="prediction"></div>
+        </div>
+
+        <div id="blogs" class="section" data-aos="fade-up">
+            <h2>Latest Blogs</h2>
+            <div class="blog-post">
+                <h3>AI in Education: The Future is Now</h3>
+                <p>Discover how artificial intelligence is transforming the educational landscape with personalized learning experiences...</p>
+            </div>
+            <div class="blog-post">
+                <h3>Effective Study Techniques</h3>
+                <p>Learn proven strategies to enhance your study sessions and improve retention...</p>
+            </div>
+        </div>
+
+        <div id="students" class="section" data-aos="fade-up">
+            <h2>Registered Students</h2>
+            <button onclick="showAddStudentForm()" class="animated-button" style="margin-bottom: 20px;">Add Student</button>
+            <div id="add-student-form" style="display: none; margin-bottom: 20px;">
+                <input type="text" id="add-username" placeholder="Username">
+                <input type="password" id="add-password" placeholder="Password">
+                <button onclick="addStudent()">Add</button>
+                <button onclick="hideAddStudentForm()">Cancel</button>
+            </div>
+            <table id="students-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="students-body"></tbody>
+            </table>
+        </div>
+
+        <div id="chat-icon" onclick="toggleChat()">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div id="chat-window">
+            <div class="chat-header">
+                <button onclick="toggleChat()">×</button>
+            </div>
+            <div id="chat-messages"></div>
+            <input type="text" id="chat-input" placeholder="Type a message...">
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Owner Credentials
+        const OWNER_USERNAME = "shanex_owner";
+        const OWNER_PASSWORD = "shanex2023";
+
+        // Student Profiles Storage (using localStorage for simplicity)
+        let students = JSON.parse(localStorage.getItem('students')) || {};
+        let userRole = 'student';
+
+        // Login Functions
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === OWNER_USERNAME && password === OWNER_PASSWORD) {
+                userRole = 'owner';
+                showAcademyPage("Welcome, Owner of Shanex Academy!");
+            } else if (students[username] && students[username] === password) {
+                userRole = 'student';
+                showAcademyPage(`Welcome, Student ${username}!`);
+            } else {
+                userRole = 'student';
+                showAcademyPage("Welcome, Guest Student!");
+            }
+        }
+
+        function showStudentRegister() {
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('student-register').classList.add('active');
+        }
+
+        function backToLogin() {
+            document.getElementById('student-register').classList.remove('active');
+            document.getElementById('login-page').classList.add('active');
+        }
+
+        function registerStudent() {
+            const newUsername = document.getElementById('new-username').value.trim();
+            const newPassword = document.getElementById('new-password').value.trim();
+
+            if (!newUsername || !newPassword) {
+                alert("Please enter both a username and password!");
+                return;
+            }
+
+            if (students[newUsername] || newUsername === OWNER_USERNAME) {
+                alert("Username already taken!");
+                return;
+            }
+
+            students[newUsername] = newPassword;
+            localStorage.setItem('students', JSON.stringify(students));
+            alert(`Student profile created for ${newUsername}! Please log in.`);
+            backToLogin();
+        }
+
+        function showAcademyPage(message) {
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('student-register').classList.remove('active');
+            document.getElementById('academy-page').classList.add('active');
+            if (userRole === 'owner') {
+                document.getElementById('owner-upload').style.display = 'block';
+                document.getElementById('owner-assignments').style.display = 'block';
+            }
+            alert(message);
+            updateMaterialsTable();
+            updateAssignmentsTable();
+            updateStudentsTable();
+            AOS.init({ duration: 1000 });
+        }
+
+        // Navigation Menu
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        // Horoscope Predictions
+        function getPrediction() {
+            const zodiac = document.getElementById('zodiac').value;
+            const predictions = {
+                aries: "Your energy is limitless this week! 🌟",
+                taurus: "Financial stability is within reach! 💰",
+                gemini: "Communication will be your superpower! ✨",
+                cancer: "Emotional bonds will strengthen this week! ❤️",
+                leo: "Leadership opportunities are coming your way! 🦁",
+                virgo: "Organization skills will shine brightly! 📊",
+                libra: "Balance in relationships brings harmony! ⚖️",
+                scorpio: "Transformation is your key theme this week! 🔮",
+                sagittarius: "Adventure awaits you around every corner! 🏞️",
+                capricorn: "Discipline leads to success this week! 🏆",
+                aquarius: "Innovation will drive your progress! 💡",
+                pisces: "Creativity flows effortlessly this week! 🎨"
+            };
+            const predictionText = predictions[zodiac] || "Please select a valid zodiac sign!";
+            document.getElementById('prediction').innerHTML = `
+                <div>
+                    <h3>🌟 ${zodiac.toUpperCase()} Prediction:</h3>
+                    <p>${predictionText}</p>
+                </div>
+            `;
+        }
+
+        // AI Chat
+        function toggleChat() {
+            const chatWindow = document.getElementById('chat-window');
+            chatWindow.style.display = chatWindow.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.getElementById('chat-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+                const msg = e.target.value;
+                document.getElementById('chat-messages').innerHTML += `<div class="user-msg">${msg}</div>`;
+                setTimeout(() => {
+                    const responses = ["How can I assist you today?", "Great question! Let me help."];
+                    const response = responses[Math.floor(Math.random() * 2)];
+                    document.getElementById('chat-messages').innerHTML += `<div class="ai-msg">${response}</div>`;
+                }, 500);
+                e.target.value = '';
+            }
+        });
+
+        // Document Management
+        let materials = [];
+        let assignments = [];
+
+        function uploadMaterial() {
+            if (userRole !== 'owner') return;
+            const fileInput = document.getElementById('material-upload');
+            const nameInput = document.getElementById('material-name');
+            const file = fileInput.files[0];
+            const name = nameInput.value.trim();
+            if (file && file.type === 'application/pdf' && name) {
+                materials.push({ name, file });
+                updateMaterialsTable();
+                fileInput.value = '';
+                nameInput.value = '';
+            }
+        }
+
+        function updateMaterialsTable() {
+            const tbody = document.getElementById('materials-body');
+            tbody.innerHTML = '';
+            materials.forEach((item, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>Course ${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.file.name}</td>
+                        <td>
+                            <button class="view-btn" onclick="viewMaterial(${index})">View</button>
+                            <button class="download-btn" onclick="downloadMaterial(${index})">Download</button>
+                            ${userRole === 'owner' ? `<button class="delete-btn" onclick="deleteMaterial(${index})">Delete</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function viewMaterial(index) {
+            const file = materials[index].file;
+            const viewer = document.getElementById('material-viewer');
+            const url = URL.createObjectURL(file);
+            viewer.innerHTML = `<iframe src="${url}" width="100%" height="100%"></iframe>`;
+        }
+
+        function downloadMaterial(index) {
+            const file = materials[index].file;
+            const url = URL.createObjectURL(file);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function deleteMaterial(index) {
+            if (userRole !== 'owner') return;
+            materials.splice(index, 1);
+            updateMaterialsTable();
+            document.getElementById('material-viewer').innerHTML = '';
+        }
+
+        function addAssignment() {
+            if (userRole !== 'owner') return;
+            const nameInput = document.getElementById('assignment-name');
+            const name = nameInput.value.trim();
+            if (name) {
+                assignments.push({ name, submissions: [] });
+                updateAssignmentsTable();
+                nameInput.value = '';
+            }
+        }
+
+        function uploadStudentAssignment(index) {
+            if (userRole !== 'student') return;
+            const fileInput = document.getElementById(`student-upload-${index}`);
+            const file = fileInput.files[0];
+            if (file && file.type === 'application/pdf') {
+                assignments[index].submissions.push(file);
+                updateAssignmentsTable();
+                fileInput.value = '';
+            }
+        }
+
+        function updateAssignmentsTable() {
+            const tbody = document.getElementById('assignments-body');
+            tbody.innerHTML = '';
+            assignments.forEach((item, index) => {
+                const submissionText = item.submissions.length ? `${item.submissions.length} file(s)` : 'No submissions';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>Course ${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${submissionText} ${userRole === 'student' ? `<input type="file" id="student-upload-${index}" accept=".pdf" onchange="uploadStudentAssignment(${index})">` : ''}</td>
+                        <td>
+                            ${item.submissions.length ? `<button class="view-btn" onclick="viewAssignment(${index})">View</button><button class="download-btn" onclick="downloadAssignment(${index})">Download</button>` : ''}
+                            ${userRole === 'owner' ? `<button class="delete-btn" onclick="deleteAssignment(${index})">Delete</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function viewAssignment(index) {
+            const files = assignments[index].submissions;
+            const viewer = document.getElementById('assignment-viewer');
+            viewer.innerHTML = '';
+            files.forEach((file, i) => {
+                const url = URL.createObjectURL(file);
+                viewer.innerHTML += `<div>File ${i + 1}: ${file.name}</div><iframe src="${url}" width="100%" height="200px"></iframe>`;
+            });
+        }
+
+        function downloadAssignment(index) {
+            const files = assignments[index].submissions;
+            files.forEach((file, i) => {
+                const url = URL.createObjectURL(file);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${assignments[index].name}_submission_${i + 1}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        function deleteAssignment(index) {
+            if (userRole !== 'owner') return;
+            assignments.splice(index, 1);
+            updateAssignmentsTable();
+            document.getElementById('assignment-viewer').innerHTML = '';
+        }
+
+        function showAddStudentForm() {
+            if (userRole !== 'owner') return;
+            document.getElementById('add-student-form').style.display = 'block';
+        }
+
+        function hideAddStudentForm() {
+            document.getElementById('add-student-form').style.display = 'none';
+        }
+
+        function addStudent() {
+            if (userRole !== 'owner') return;
+            const username = document.getElementById('add-username').value.trim();
+            const password = document.getElementById('add-password').value.trim();
+
+            if (!username || !password) {
+                alert("Please enter both a username and password!");
+                return;
+            }
+
+            if (students[username]) {
+                alert("Username already taken!");
+                return;
+            }
+
+            students[username] = password;
+            localStorage.setItem('students', JSON.stringify(students));
+            updateStudentsTable();
+            hideAddStudentForm();
+        }
+
+        function updateStudentsTable() {
+            const tbody = document.getElementById('students-body');
+            tbody.innerHTML = '';
+            Object.keys(students).forEach(username => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${username}</td>
+                        <td>${students[username]}</td>
+                        <td>
+                            <button class="delete-btn" onclick="deleteStudent('${username}')">Delete</button>
+                            <button class="animated-button" onclick="changePassword('${username}')">Change Password</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteStudent(username) {
+            if (userRole !== 'owner') return;
+            delete students[username];
+            localStorage.setItem('students', JSON.stringify(students));
+            updateStudentsTable();
+        }
+
+        function changePassword(username) {
+            if (userRole !== 'owner') return;
+            const newPassword = prompt("Enter new password for " + username);
+            if (newPassword) {
+                students[username] = newPassword;
+                localStorage.setItem('students', JSON.stringify(students));
+                updateStudentsTable();
+            }
+        }
+    </script>
+</body>
+</html>
